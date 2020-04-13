@@ -13,6 +13,7 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> with TickerProviderStateMixin {
   TabController _tabController;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -36,47 +37,86 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
               style: Theme.of(context).textTheme.title,
             ),
             bottom: TabBar(
+              isScrollable: true,
               labelColor: Colors.black,
-              tabs: <Widget>[getTabs("Headlines"), getTabs("Business")],
+              tabs: <Widget>[
+                getTabs("Headlines"),
+                getTabs("Business"),
+                getTabs("Entertainment"),
+                getTabs("General"),
+                getTabs("Health"),
+                getTabs("Science"),
+                getTabs("Sports"),
+                getTabs("Technology")
+              ],
               controller: _tabController,
             )),
+        bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Colors.blue,
+          type: BottomNavigationBarType.fixed,
+          onTap: onTabTapped,
+          currentIndex: _currentIndex,
+          items: [
+            getBottomNavItem(Icons.home, "Notizie"),
+            getBottomNavItem(Icons.star_border, "Segui"),
+          ],
+        ),
         body: Container(
             child: TabBarView(controller: _tabController, children: <Widget>[
-          Center(
-              child: RefreshIndicator(
-                  onRefresh: () => _refresh(context),
-                  child:
-                      Consumer<ArticlesHolder>(builder: (context, news, child) {
-                    return ListView.builder(
-                        itemCount: news.articles.length,
-                        itemBuilder: (context, position) => Text(
-                              news.articles[position].title,
-                              style: Theme.of(context).textTheme.headline1,
-                            ));
-                  }))),
           Center(
               child: RefreshIndicator(
                   onRefresh: () => _refresh(context),
                   child: Consumer<ArticlesHolder>(
                       builder: (context, holder, child) {
                     return ListView.builder(
-                        itemCount: holder.getArticles("business") == null
+                        itemCount: holder.articles.length == null
                             ? 0
-                            : holder.getArticles("business").length,
+                            : holder.articles.length,
                         itemBuilder: (context, position) =>
-                            NewsItem(holder.getArticles("business")[position]));
-                  })))
+                            NewsItem(holder.articles[position]));
+                  }))),
+          TabItem("business"),
+          TabItem("entertainment"),
+          TabItem("general"),
+          TabItem("health"),
+          TabItem("science"),
+          TabItem("sports"),
+          TabItem("technology"),
         ])));
   }
 
   TabController getTabController() {
-    return TabController(length: 2, vsync: this);
+    return TabController(length: 8, vsync: this);
   }
 
   Tab getTabs(String category) {
     return Tab(
       text: category,
     );
+  }
+
+  Center TabItem(String category) {
+    return Center(
+        child: RefreshIndicator(
+            onRefresh: () => _refresh(context),
+            child: Consumer<ArticlesHolder>(builder: (context, holder, child) {
+              return ListView.builder(
+                  itemCount: holder.getArticles(category) == null
+                      ? 0
+                      : holder.getArticles(category).length,
+                  itemBuilder: (context, position) =>
+                      NewsItem(holder.getArticles(category)[position]));
+            })));
+  }
+
+  BottomNavigationBarItem getBottomNavItem(IconData icons, String text) {
+    return BottomNavigationBarItem(icon: Icon(icons), title: Text(text));
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   Future<bool> _refresh(BuildContext context) async {
@@ -87,5 +127,17 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
   void _handleTabSelection() async {
     if (_tabController.index == 1)
       await Api().fetchArticles(context: context, category: "business");
+    if (_tabController.index == 2)
+      await Api().fetchArticles(context: context, category: "entertainment");
+    if (_tabController.index == 3)
+      await Api().fetchArticles(context: context, category: "general");
+    if (_tabController.index == 4)
+      await Api().fetchArticles(context: context, category: "health");
+    if (_tabController.index == 5)
+      await Api().fetchArticles(context: context, category: "science");
+    if (_tabController.index == 6)
+      await Api().fetchArticles(context: context, category: "sports");
+    if (_tabController.index == 7)
+      await Api().fetchArticles(context: context, category: "technology");
   }
 }

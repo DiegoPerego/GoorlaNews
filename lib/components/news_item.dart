@@ -17,17 +17,14 @@ class NewsItem extends StatelessWidget {
             ClipRRect(
               child: article.urlToImage != null
                   ? Image(image: NetworkImage(article.urlToImage))
-                  : Container(
-                      height: 150,
-                      color: Colors.blue,
-                    ),
+                  : Image(image: AssetImage('images/goorla_news.png')),
               borderRadius: BorderRadius.circular(20.0),
             ),
             const SizedBox(
               height: 8,
             ),
             Text(
-              article.author != null ? article.author : "",
+              article.source != null ? article.source : "",
             ),
             const SizedBox(
               height: 8,
