@@ -65,7 +65,7 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
             child: TabBarView(controller: _tabController, children: <Widget>[
           Center(
               child: RefreshIndicator(
-                  onRefresh: () => _refresh(context),
+                  onRefresh: () => _refresh(context, null),
                   child: Consumer<ArticlesHolder>(
                       builder: (context, holder, child) {
                     return ListView.builder(
@@ -98,7 +98,7 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
   Center TabItem(String category) {
     return Center(
         child: RefreshIndicator(
-            onRefresh: () => _refresh(context),
+            onRefresh: () => _refresh(context, category),
             child: Consumer<ArticlesHolder>(builder: (context, holder, child) {
               return ListView.builder(
                   itemCount: holder.getArticles(category) == null
@@ -119,8 +119,11 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
     });
   }
 
-  Future<bool> _refresh(BuildContext context) async {
-    await Api().fetchArticles(context: context, category: "business");
+  Future<bool> _refresh(BuildContext context, String category) async {
+    if (category == null)
+      await Api().fetchArticles(context: context, category: "headlines");
+    else
+      await Api().fetchArticles(context: context, category: category);
     return true;
   }
 

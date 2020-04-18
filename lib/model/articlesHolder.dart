@@ -13,6 +13,15 @@ class ArticlesHolder extends ChangeNotifier {
 
   final Map<String, List<Article>> _articlesMap = Map();
 
+  Article _selectedArticle;
+
+
+  Article get selectedArticle => _selectedArticle;
+
+  set selectedArticle(Article value) {
+    _selectedArticle = value;
+  }
+
   set articles(List<Article> news) {
     assert(news != null);
     _articles.clear;
