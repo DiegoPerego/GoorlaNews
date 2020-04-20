@@ -29,4 +29,15 @@ class Article {
         publishedAt: json['publishedAt'] as String,
         source: json['source']['name'] as String);
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> article = new Map<String, dynamic>();
+    article['author'] = this.author;
+    article['title'] = this.title;
+    article['description'] = this.description;
+    article['url'] = this.url;
+    article['urlToImage'] = this.urlToImage;
+    article['publishedAt'] = this.publishedAt;
+    article['source'] = this.source;
+  }
 }
