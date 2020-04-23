@@ -5,7 +5,7 @@ import 'package:goorlanews/services/api.dart';
 import 'article.dart';
 
 class ArticlesHolder extends ChangeNotifier {
-  ArticlesHolder() {
+  ArticlesHolder({List<Article> favArticles}) {
     Api().getHeadlines().then((value) => articles = value);
   }
 
@@ -13,7 +13,7 @@ class ArticlesHolder extends ChangeNotifier {
 
   final Map<String, List<Article>> _articlesMap = Map();
 
-  final List<Article> _favArticles = [];
+  final List<Article> favArticles = [];
 
   final List<Article> _articlesSearchedMap = [];
 
@@ -40,14 +40,14 @@ class ArticlesHolder extends ChangeNotifier {
 
   void addArticleToFav(Article article) {
     assert(article != null);
-    _favArticles.add(article);
+    favArticles.add(article);
     notifyListeners();
   }
 
   void removeArticleFromFav(Article article) {
     assert(article != null);
-    assert(_favArticles.length != 0);
-    _favArticles.remove(article);
+    assert(favArticles.length != 0);
+    favArticles.remove(article);
     notifyListeners();
   }
 
@@ -65,9 +65,24 @@ class ArticlesHolder extends ChangeNotifier {
 
   List<Article> getArticles(String category) => _articlesMap[category];
 
-  List<Article> getFavouriteArticles() => _favArticles;
+  List<Article> getFavouriteArticles() => favArticles;
 
   List<Article> getSearchedArticles(String search) => _articlesSearchedMap;
 
   List<Article> get articles => _articles;
+
+  factory ArticlesHolder.fromJson(List<dynamic> parsedJson) {
+    List<Article> articles = List<Article>();
+    articles = parsedJson.map((i) => Article.fromJson(i)).toList();
+
+    return ArticlesHolder(
+      favArticles: articles,
+    );
+  }
+
+  List<Map> toJson() {
+    List<Map> articles = favArticles.map((i) => i.toJson()).toList();
+
+    return articles;
+  }
 }

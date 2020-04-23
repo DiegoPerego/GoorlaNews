@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:goorlanews/components/news_item.dart';
 import 'package:goorlanews/components/article_search.dart';
+import 'package:goorlanews/components/news_item.dart';
 import 'package:goorlanews/model/article.dart';
 import 'package:goorlanews/model/articlesHolder.dart';
 import 'package:goorlanews/services/api.dart';
@@ -76,7 +76,7 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
 
   //region Tab
   TabController getTabController() {
-    return TabController(length: 8, vsync: this);
+    return TabController(length: 7, vsync: this);
   }
 
   Tab getTabs(String category) {
@@ -95,7 +95,6 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
         getTabs("Headlines"),
         getTabs("Business"),
         getTabs("Entertainment"),
-        getTabs("General"),
         getTabs("Health"),
         getTabs("Science"),
         getTabs("Sports"),
@@ -122,7 +121,6 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
               }))),
       TabItem("business"),
       TabItem("entertainment"),
-      TabItem("general"),
       TabItem("health"),
       TabItem("science"),
       TabItem("sports"),
@@ -150,14 +148,12 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
     if (_tabController.index == 2)
       await Api().fetchArticles(context: context, category: "entertainment");
     if (_tabController.index == 3)
-      await Api().fetchArticles(context: context, category: "general");
-    if (_tabController.index == 4)
       await Api().fetchArticles(context: context, category: "health");
-    if (_tabController.index == 5)
+    if (_tabController.index == 4)
       await Api().fetchArticles(context: context, category: "science");
-    if (_tabController.index == 6)
+    if (_tabController.index == 5)
       await Api().fetchArticles(context: context, category: "sports");
-    if (_tabController.index == 7)
+    if (_tabController.index == 6)
       await Api().fetchArticles(context: context, category: "technology");
   }
 

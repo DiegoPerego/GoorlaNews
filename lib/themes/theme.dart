@@ -20,6 +20,12 @@ final appTheme = ThemeData(
         fontWeight: FontWeight.bold,
         fontSize: 16,
         color: Colors.black,
+      ),
+      headline2: TextStyle(
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w400,
+        fontSize: 16,
+        color: Colors.grey[700],
       )),
 );
 

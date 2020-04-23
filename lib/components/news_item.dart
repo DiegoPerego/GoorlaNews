@@ -17,13 +17,15 @@ class NewsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          kIsWeb
-              ? _launchURL(article.url)
-              : Provider.of<ArticlesHolder>(context, listen: false)
-                  .selectedArticle = article;
-          Navigator.pushNamed(context, '/newsDetail');
+          kIsWeb ? _launchURL(article.url) : _launchNewsDetail(context);
         },
         child: isMini ? NewsItemMini(article) : NewsItemMaxi(article));
+  }
+
+  _launchNewsDetail(BuildContext context) {
+    Provider.of<ArticlesHolder>(context, listen: false).selectedArticle =
+        article;
+    Navigator.pushNamed(context, '/newsDetail');
   }
 
   _launchURL(String url) async {

@@ -18,6 +18,7 @@ class NewsItemImage extends StatelessWidget {
                   image: NetworkImage(image),
                   height: height,
                   width: width,
+                  fit: BoxFit.cover,
                 )
               : Image(image: NetworkImage(image))
           : height != null && width != null
@@ -25,6 +26,7 @@ class NewsItemImage extends StatelessWidget {
                   image: AssetImage('images/goorla_news.png'),
                   height: height,
                   width: width,
+                  fit: BoxFit.cover,
                 )
               : Image(image: AssetImage('images/goorla_news.png')),
       borderRadius:
