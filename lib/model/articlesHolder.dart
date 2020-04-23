@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:goorlanews/services/api.dart';
@@ -5,7 +7,7 @@ import 'package:goorlanews/services/api.dart';
 import 'article.dart';
 
 class ArticlesHolder extends ChangeNotifier {
-  ArticlesHolder({List<Article> favArticles}) {
+  ArticlesHolder() {
     Api().getHeadlines().then((value) => articles = value);
   }
 
@@ -13,7 +15,7 @@ class ArticlesHolder extends ChangeNotifier {
 
   final Map<String, List<Article>> _articlesMap = Map();
 
-  final List<Article> favArticles = [];
+  final Map<String, Article> _favArticles = Map();
 
   final List<Article> _articlesSearchedMap = [];
 
@@ -40,14 +42,14 @@ class ArticlesHolder extends ChangeNotifier {
 
   void addArticleToFav(Article article) {
     assert(article != null);
-    favArticles.add(article);
+    _favArticles.putIfAbsent(article.url, () => article);
     notifyListeners();
   }
 
   void removeArticleFromFav(Article article) {
     assert(article != null);
-    assert(favArticles.length != 0);
-    favArticles.remove(article);
+    assert(_favArticles.length != 0);
+    _favArticles.remove(article.url);
     notifyListeners();
   }
 
@@ -65,24 +67,9 @@ class ArticlesHolder extends ChangeNotifier {
 
   List<Article> getArticles(String category) => _articlesMap[category];
 
-  List<Article> getFavouriteArticles() => favArticles;
+  LinkedHashMap<String, Article> getFavouriteArticles() => _favArticles;
 
   List<Article> getSearchedArticles(String search) => _articlesSearchedMap;
 
   List<Article> get articles => _articles;
-
-  factory ArticlesHolder.fromJson(List<dynamic> parsedJson) {
-    List<Article> articles = List<Article>();
-    articles = parsedJson.map((i) => Article.fromJson(i)).toList();
-
-    return ArticlesHolder(
-      favArticles: articles,
-    );
-  }
-
-  List<Map> toJson() {
-    List<Map> articles = favArticles.map((i) => i.toJson()).toList();
-
-    return articles;
-  }
 }

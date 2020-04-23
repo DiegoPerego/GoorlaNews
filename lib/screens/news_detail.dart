@@ -77,8 +77,12 @@ class _NewsDetailState extends State<NewsDetail> {
     });
 
     if (isAddedToFav) {
-      sharedPref.save("TEST",
+      Provider.of<ArticlesHolder>(context, listen: false).addArticleToFav(
           Provider.of<ArticlesHolder>(context, listen: false).selectedArticle);
+      sharedPref.save(
+          "FAVOURITE",
+          Provider.of<ArticlesHolder>(context, listen: false)
+              .getFavouriteArticles());
     }
 
     SnackBar _snackBar = isAddedToFav

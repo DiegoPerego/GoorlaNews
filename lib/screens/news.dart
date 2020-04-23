@@ -179,31 +179,37 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
     });
   }
 
-  Future<Article> loadSharedPrefs() async {
-    return Article.fromJson(await sharedPref.read("TEST"));
+  Future<List<Article>> loadSharedPrefs() async {
+    List<Article> favList = [];
+    Map<dynamic, dynamic> favMap = await sharedPref.read("FAVOURITE");
+    favMap.forEach((key, value) {
+      Article article = Article.fromJson(value);
+      favList.add(article);
+    });
+    return favList;
   }
 
   Container getFavList() {
     return Container(
-      child: Column(
+      child: /*Column(
         children: <Widget>[
           Container(
               alignment: Alignment.topLeft,
               margin: EdgeInsets.fromLTRB(24, 32, 24, 0),
               child: Text('Notizie salvate',
                   style: Theme.of(context).textTheme.title)),
-          getFavFromShared()
+
         ],
-      ),
+      )*/getFavFromShared(),
     );
   }
 
   Widget getFavFromShared() {
-    return FutureBuilder<Article>(
+    return FutureBuilder<List<Article>>(
       future: loadSharedPrefs(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          Article data = snapshot.data;
+          List<Article> data = snapshot.data.toList();
           return favArticleListView(data);
         } else if (snapshot.hasError) {
           return emptyFavList();
@@ -213,12 +219,10 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
     );
   }
 
-  ListView favArticleListView(Article article) {
+  ListView favArticleListView(List<Article> article) {
     return ListView.builder(
-      itemCount: 1,
-      itemBuilder: (context, position) => NewsItem(article, true),
-      shrinkWrap: true,
-    );
+        itemCount: article.length == null ? 0 : article.length,
+        itemBuilder: (context, position) => NewsItem(article[position], true));
   }
 
   Container emptyFavList() {
