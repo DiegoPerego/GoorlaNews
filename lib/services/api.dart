@@ -17,10 +17,20 @@ class Api {
     var articlesHolder = Provider.of<ArticlesHolder>(context, listen: false);
     var client = http.Client();
     final response =
-    await client.get(_buildUrl(TOP_HEADLINES, category: category));
+        await client.get(_buildUrl(TOP_HEADLINES, category: category));
 
     List<Article> news = await compute(_parseArticle, response.body);
     articlesHolder.addToArticlesMap(category, news);
+  }
+
+  Future<void> searchArticles(
+      {@required BuildContext context, String search}) async {
+    var articlesHolder = Provider.of<ArticlesHolder>(context, listen: false);
+    var client = http.Client();
+    final response = await client.get(_buildUrl(TOP_HEADLINES, search: search));
+
+    List<Article> news = await compute(_parseArticle, response.body);
+    articlesHolder.addToArticlesSearchedMap(news);
   }
 
   Future<List<Article>> getHeadlines() async {
@@ -38,11 +48,15 @@ class Api {
         .toList();
   }
 
-  String _buildUrl(String endpoint, {String category}) {
+  String _buildUrl(String endpoint, {String category, String search}) {
     String url = '$API$endpoint?country=it';
 
     if (category != null) {
       url += '&category=$category';
+    }
+
+    if (search != null) {
+      url += '&q=$search';
     }
 
     return '$url&apiKey=$TOKEN';

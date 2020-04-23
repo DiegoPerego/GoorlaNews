@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goorlanews/model/articlesHolder.dart';
 import 'package:goorlanews/screens/news_detail.dart';
-import 'package:goorlanews/screens/search.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/news.dart';
@@ -25,7 +24,6 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => News(),
           '/newsDetail': (context) => NewsDetail(),
-          '/search': (context) => Search(),
         },
       ),
     );

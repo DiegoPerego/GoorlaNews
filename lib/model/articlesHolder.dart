@@ -13,8 +13,11 @@ class ArticlesHolder extends ChangeNotifier {
 
   final Map<String, List<Article>> _articlesMap = Map();
 
-  Article _selectedArticle;
+  final List<Article> _favArticles = [];
 
+  final List<Article> _articlesSearchedMap = [];
+
+  Article _selectedArticle;
 
   Article get selectedArticle => _selectedArticle;
 
@@ -35,7 +38,36 @@ class ArticlesHolder extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addArticleToFav(Article article) {
+    assert(article != null);
+    _favArticles.add(article);
+    notifyListeners();
+  }
+
+  void removeArticleFromFav(Article article) {
+    assert(article != null);
+    assert(_favArticles.length != 0);
+    _favArticles.remove(article);
+    notifyListeners();
+  }
+
+  void addToArticlesSearchedMap(List<Article> news) {
+    assert(news != null);
+    _articlesSearchedMap.clear();
+    _articlesSearchedMap.addAll(news);
+    notifyListeners();
+  }
+
+  void clearArticleSearched() {
+    assert(_articlesSearchedMap != null);
+    _articlesSearchedMap.clear();
+  }
+
   List<Article> getArticles(String category) => _articlesMap[category];
+
+  List<Article> getFavouriteArticles() => _favArticles;
+
+  List<Article> getSearchedArticles(String search) => _articlesSearchedMap;
 
   List<Article> get articles => _articles;
 }

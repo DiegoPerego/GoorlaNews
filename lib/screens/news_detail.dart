@@ -19,10 +19,11 @@ class _NewsDetailState extends State<NewsDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _key = UniqueKey();
   bool isAddedToFav = false;
+  Article article;
 
   @override
   Widget build(BuildContext context) {
-    Article article =
+    article =
         Provider.of<ArticlesHolder>(context, listen: false).selectedArticle;
 
     return Scaffold(

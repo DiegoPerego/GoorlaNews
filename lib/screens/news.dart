@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goorlanews/components/news_item.dart';
+import 'package:goorlanews/components/article_search.dart';
 import 'package:goorlanews/model/article.dart';
 import 'package:goorlanews/model/articlesHolder.dart';
 import 'package:goorlanews/services/api.dart';
@@ -42,7 +43,9 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.search, color: Colors.grey[600]),
-            onPressed: _searchNavigation,
+            onPressed: () {
+              showSearch(context: context, delegate: ArticleSearch());
+            },
           ),
           title: Text(
             _title,
@@ -63,7 +66,9 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
       floatingActionButton: _showTabs
           ? null
           : FloatingActionButton(
-              onPressed: _searchNavigation,
+              onPressed: () {
+                showSearch(context: context, delegate: ArticleSearch());
+              },
               child: Icon(Icons.add),
             ),
     );
@@ -214,8 +219,10 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
 
   ListView favArticleListView(Article article) {
     return ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, position) => NewsItem(article, false));
+      itemCount: 1,
+      itemBuilder: (context, position) => NewsItem(article, true),
+      shrinkWrap: true,
+    );
   }
 
   Container emptyFavList() {
@@ -227,7 +234,7 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
               child: Text('Nessuna notizia salvata da leggere più tardi',
                   style: TextStyle(
                       fontSize: 18,
-                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w400,
                       color: Colors.grey[700])),
             ),
             Image(
@@ -238,10 +245,6 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
           ],
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ));
-  }
-
-  void _searchNavigation() {
-    Navigator.pushNamed(context, '/search');
   }
 
   Future<bool> _refresh(BuildContext context, String category) async {

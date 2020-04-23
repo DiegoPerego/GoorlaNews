@@ -11,34 +11,43 @@ class NewsItemMaxi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            NewsItemImage(
-              article.urlToImage,
-              radius: 20.0,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              article.source != null ? article.source : "",
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              article.title,
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              DateUtils.getArticleDate(article.publishedAt),
-            )
-          ],
-        ));
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              NewsItemImage(
+                article.urlToImage,
+                radius: 20.0,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                article.source != null ? article.source : "",
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                article.title,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    DateUtils.getArticleDate(article.publishedAt),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () {},
+                  )
+                ],
+              )
+            ],
+          ));
   }
 }
