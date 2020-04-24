@@ -19,18 +19,4 @@ class SharedPref {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(key);
   }
-
-  _linkedToHashMap(LinkedHashMap<String, dynamic> favLinked) {
-    HashMap<String, List<Article>> newMap =
-        HashMap.from(favLinked.map((key, value) {
-      List<Article> values = List.from(value);
-      return MapEntry(
-          key.toString(),
-          values.map((theValue) {
-            return theValue.toString();
-          }).toList());
-    }));
-
-    return newMap;
-  }
 }
