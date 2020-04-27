@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:goorlanews/components/article_search.dart';
 import 'package:goorlanews/components/news_item.dart';
@@ -20,14 +22,17 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
   int _currentIndex = 0;
   String _title;
   bool _showTabs;
+  bool _showFav;
 
   @override
   void initState() {
     super.initState();
     _showTabs = true;
+    _showFav = false;
     _title = 'Notizie';
     _tabController = getTabController();
     _tabController.addListener(_handleTabSelection);
+    loadSharedPrefs();
   }
 
   @override
@@ -179,50 +184,45 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
     });
   }
 
-  Future<List<Article>> loadSharedPrefs() async {
-    List<Article> favList = [];
+  void loadSharedPrefs() async {
+    LinkedHashMap<String, Article> favList = LinkedHashMap();
     Map<dynamic, dynamic> favMap = await sharedPref.read("FAVOURITE");
     favMap.forEach((key, value) {
       Article article = Article.fromJson(value);
-      favList.add(article);
+      favList.putIfAbsent(key, () => article);
     });
-    return favList;
+    Provider.of<ArticlesHolder>(context, listen: false).favArticles = favList;
   }
 
   Container getFavList() {
+    Provider.of<ArticlesHolder>(context).getArticlesFav().length > 0
+        ? _showFav = true
+        : _showFav = false;
     return Container(
-      child: /*Column(
-        children: <Widget>[
-          Container(
-              alignment: Alignment.topLeft,
-              margin: EdgeInsets.fromLTRB(24, 32, 24, 0),
-              child: Text('Notizie salvate',
-                  style: Theme.of(context).textTheme.title)),
-
-        ],
-      )*/getFavFromShared(),
-    );
+        child: Column(
+      children: <Widget>[
+        Container(
+            alignment: Alignment.topLeft,
+            margin: EdgeInsets.fromLTRB(24, 32, 24, 24),
+            child: Text('Notizie salvate',
+                style: Theme.of(context).textTheme.title)),
+        _showFav ? getFav() : emptyFavList(),
+      ],
+    ));
   }
 
-  Widget getFavFromShared() {
-    return FutureBuilder<List<Article>>(
-      future: loadSharedPrefs(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<Article> data = snapshot.data.toList();
-          return favArticleListView(data);
-        } else if (snapshot.hasError) {
-          return emptyFavList();
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
-
-  ListView favArticleListView(List<Article> article) {
-    return ListView.builder(
-        itemCount: article.length == null ? 0 : article.length,
-        itemBuilder: (context, position) => NewsItem(article[position], true));
+  Widget getFav() {
+    return Expanded(
+        child: Consumer<ArticlesHolder>(builder: (context, holder, child) {
+      return ListView.builder(
+        itemCount: holder.getArticlesFav().length == null
+            ? 0
+            : holder.getArticlesFav().length,
+        itemBuilder: (context, position) =>
+            NewsItem(holder.getArticlesFav()[position], true),
+        shrinkWrap: true,
+      );
+    }));
   }
 
   Container emptyFavList() {

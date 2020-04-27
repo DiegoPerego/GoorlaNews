@@ -25,6 +25,8 @@ class _NewsDetailState extends State<NewsDetail> {
   Widget build(BuildContext context) {
     article =
         Provider.of<ArticlesHolder>(context, listen: false).selectedArticle;
+    isAddedToFav = Provider.of<ArticlesHolder>(context, listen: false)
+        .isArticleInFav(article);
 
     return Scaffold(
         key: _scaffoldKey,
@@ -76,14 +78,16 @@ class _NewsDetailState extends State<NewsDetail> {
       isAddedToFav = !isAddedToFav;
     });
 
-    if (isAddedToFav) {
-      Provider.of<ArticlesHolder>(context, listen: false).addArticleToFav(
-          Provider.of<ArticlesHolder>(context, listen: false).selectedArticle);
-      sharedPref.save(
-          "FAVOURITE",
-          Provider.of<ArticlesHolder>(context, listen: false)
-              .getFavouriteArticles());
-    }
+    isAddedToFav
+        ? Provider.of<ArticlesHolder>(context, listen: false)
+            .addArticleToFav(article)
+        : Provider.of<ArticlesHolder>(context, listen: false)
+            .removeArticleFromFav(article);
+
+    sharedPref.save(
+        "FAVOURITE",
+        Provider.of<ArticlesHolder>(context, listen: false)
+            .getFavouriteArticles());
 
     SnackBar _snackBar = isAddedToFav
         ? showSnackbar('Notizia aggiunta in Segui')

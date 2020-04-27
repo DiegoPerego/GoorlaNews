@@ -15,7 +15,9 @@ class ArticlesHolder extends ChangeNotifier {
 
   final Map<String, List<Article>> _articlesMap = Map();
 
-  final Map<String, Article> _favArticles = Map();
+  LinkedHashMap<String, Article> _favArticles = LinkedHashMap();
+
+  final List<Article> _favArticlesList = [];
 
   final List<Article> _articlesSearchedMap = [];
 
@@ -48,7 +50,7 @@ class ArticlesHolder extends ChangeNotifier {
 
   void removeArticleFromFav(Article article) {
     assert(article != null);
-    assert(_favArticles.length != 0);
+    assert(_favArticles.length > 0);
     _favArticles.remove(article.url);
     notifyListeners();
   }
@@ -65,9 +67,25 @@ class ArticlesHolder extends ChangeNotifier {
     _articlesSearchedMap.clear();
   }
 
+  bool isArticleInFav(Article article){
+    assert(article != null);
+    return _favArticles.containsKey(article.url);
+  }
+
   List<Article> getArticles(String category) => _articlesMap[category];
 
   LinkedHashMap<String, Article> getFavouriteArticles() => _favArticles;
+
+  List<Article> getArticlesFav() => mapToList();
+
+  List<Article> mapToList(){
+    return _favArticles.entries.map((e) => e.value).toList();
+  }
+
+  set favArticles(LinkedHashMap<String, Article> value) {
+    _favArticles.clear();
+    _favArticles = value;
+  }
 
   List<Article> getSearchedArticles(String search) => _articlesSearchedMap;
 
