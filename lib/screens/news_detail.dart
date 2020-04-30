@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goorlanews/model/article.dart';
 import 'package:goorlanews/model/articlesHolder.dart';
+import 'package:goorlanews/services/db_repo.dart';
 import 'package:goorlanews/shared_preferences/shared_preference.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -21,12 +22,17 @@ class _NewsDetailState extends State<NewsDetail> {
   bool isAddedToFav = false;
   Article article;
 
+  final DbRepository _dbRepository = DbRepository();
+
   @override
   Widget build(BuildContext context) {
+    _dbRepository.watch().forEach((element) {
+      print("update");
+    });
+
     article =
         Provider.of<ArticlesHolder>(context, listen: false).selectedArticle;
-    isAddedToFav = Provider.of<ArticlesHolder>(context, listen: false)
-        .isArticleInFav(article);
+    isAddedToFav = _dbRepository.containsArticle(article.id);
 
     return Scaffold(
         key: _scaffoldKey,
@@ -79,15 +85,8 @@ class _NewsDetailState extends State<NewsDetail> {
     });
 
     isAddedToFav
-        ? Provider.of<ArticlesHolder>(context, listen: false)
-            .addArticleToFav(article)
-        : Provider.of<ArticlesHolder>(context, listen: false)
-            .removeArticleFromFav(article);
-
-    sharedPref.save(
-        "FAVOURITE",
-        Provider.of<ArticlesHolder>(context, listen: false)
-            .getFavouriteArticles());
+        ? _dbRepository.addArticle(article)
+        : _dbRepository.removeArticle(article.id);
 
     SnackBar _snackBar = isAddedToFav
         ? showSnackbar('Notizia aggiunta in Segui')
