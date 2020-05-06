@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:goorlanews/components/news_item_maxi.dart';
 import 'package:goorlanews/components/news_item_mini.dart';
 import 'package:goorlanews/model/article.dart';
-import 'package:goorlanews/model/articlesHolder.dart';
+import 'package:goorlanews/news_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,8 +23,7 @@ class NewsItem extends StatelessWidget {
   }
 
   _launchNewsDetail(BuildContext context) {
-    Provider.of<ArticlesHolder>(context, listen: false).selectedArticle =
-        article;
+    Provider.of<NewsBloc>(context, listen: false).selectedArticle = article;
     Navigator.pushNamed(context, '/newsDetail');
   }
 

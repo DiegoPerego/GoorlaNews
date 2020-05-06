@@ -3,12 +3,10 @@ import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:dio_flutter_transformer/dio_flutter_transformer.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:goorlanews/model/article.dart';
-import 'package:goorlanews/model/articlesHolder.dart';
-import 'package:provider/provider.dart';
 
 const String API = "https://newsapi.org/v2/";
 const String TOP_HEADLINES = "top-headlines";
@@ -44,50 +42,20 @@ class Api {
     }));
   }
 
-  Future<List<Article>> getHeadlines() async {
+  Future<List<Article>> getArticles({String category, String search}) async {
     Response response = await dio.get(TOP_HEADLINES,
-        options: buildCacheOptions(Duration(seconds: 30)));
+        options: buildCacheOptions(Duration(seconds: 120),
+            options: Options(extra: createExtras(category, search))));
 
     return response.data['articles']
         .map<Article>((json) => Article.fromJson(json))
         .toList();
   }
 
-  Future<void> fetchArticles(
-      {@required BuildContext context, String category}) async {
-    var articlesHolder = Provider.of<ArticlesHolder>(context, listen: false);
-    Response response = await dio.get(TOP_HEADLINES,
-        options: buildCacheOptions(Duration(seconds: 30),
-            options: Options(extra: createExtrasCategory(category))));
-
-    List<Article> news = response.data['articles']
-        .map<Article>((json) => Article.fromJson(json))
-        .toList();
-    return articlesHolder.addToArticlesMap(category, news);
-  }
-
-  Future<void> searchArticles(
-      {@required BuildContext context, String search}) async {
-    var articlesHolder = Provider.of<ArticlesHolder>(context, listen: false);
-    Response response = await dio.get(TOP_HEADLINES,
-        options: buildCacheOptions(Duration(seconds: 30),
-            options: Options(extra: createExtrasSearch(search))));
-
-    List<Article> news = response.data['articles']
-        .map<Article>((json) => Article.fromJson(json))
-        .toList();
-    return articlesHolder.addToArticlesSearchedMap(news);
-  }
-
-  Map<String, dynamic> createExtrasCategory(String category) {
+  Map<String, dynamic> createExtras(String category, String query) {
     LinkedHashMap<String, dynamic> map = LinkedHashMap();
-    map['category'] = category;
-    return map;
-  }
-
-  Map<String, dynamic> createExtrasSearch(String search) {
-    LinkedHashMap<String, dynamic> map = LinkedHashMap();
-    map['q'] = search;
+    if (category != null) map['category'] = category;
+    if (query != null) map['q'] = query;
     return map;
   }
 }

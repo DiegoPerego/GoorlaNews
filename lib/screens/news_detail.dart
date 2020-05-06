@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goorlanews/components/snackbar.dart';
 import 'package:goorlanews/model/article.dart';
-import 'package:goorlanews/model/articlesHolder.dart';
+import 'package:goorlanews/news_bloc.dart';
 import 'package:goorlanews/services/db_repo.dart';
-import 'package:goorlanews/shared_preferences/shared_preference.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -16,7 +16,6 @@ class NewsDetail extends StatefulWidget {
 }
 
 class _NewsDetailState extends State<NewsDetail> {
-  SharedPref sharedPref = SharedPref();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _key = UniqueKey();
   bool isAddedToFav = false;
@@ -30,8 +29,8 @@ class _NewsDetailState extends State<NewsDetail> {
       print("update");
     });
 
-    article =
-        Provider.of<ArticlesHolder>(context, listen: false).selectedArticle;
+    final bloc = Provider.of<NewsBloc>(context, listen: false);
+    article = bloc.selectedArticle;
     isAddedToFav = _dbRepository.containsArticle(article.id);
 
     return Scaffold(
@@ -84,21 +83,8 @@ class _NewsDetailState extends State<NewsDetail> {
       isAddedToFav = !isAddedToFav;
     });
 
-    isAddedToFav
-        ? _dbRepository.addArticle(article)
-        : _dbRepository.removeArticle(article.id);
-
-    SnackBar _snackBar = isAddedToFav
-        ? showSnackbar('Notizia aggiunta in Segui')
-        : showSnackbar('Notizia rimossa da Segui');
-    _scaffoldKey.currentState.showSnackBar(_snackBar);
-  }
-
-  SnackBar showSnackbar(String text) {
-    return SnackBar(
-      content: Text(text),
-      behavior: SnackBarBehavior.floating,
-      duration: Duration(milliseconds: 1000),
-    );
-  }
+    final bloc = Provider.of<NewsBloc>(context, listen: false);
+    bloc.addToFav(isAddedToFav);
+    _scaffoldKey.currentState
+        .showSnackBar(SnackbarArticle(isAddedToFav).build(context));  }
 }

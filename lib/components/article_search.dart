@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:goorlanews/components/news_item.dart';
+import 'package:goorlanews/components/news_list.dart';
 import 'package:goorlanews/model/articlesHolder.dart';
 import 'package:goorlanews/services/api.dart';
 import 'package:goorlanews/themes/theme.dart';
 import 'package:provider/provider.dart';
+
+import '../news_bloc.dart';
 
 class ArticleSearch extends SearchDelegate<String> {
   ArticleSearch();
@@ -17,8 +20,6 @@ class ArticleSearch extends SearchDelegate<String> {
               icon: Icon(Icons.clear),
               onPressed: () {
                 query = '';
-                Provider.of<ArticlesHolder>(context, listen: false)
-                    .clearArticleSearched();
               })
           : Container()
     ];
@@ -36,17 +37,13 @@ class ArticleSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
+    final bloc = Provider.of<NewsBloc>(context, listen: false);
     // show some result based on the selection
-    query.isNotEmpty ? _handleSearch(context, query) : null;
+    query.isNotEmpty ? bloc.handleSearch(query) : null;
 
-    return Consumer<ArticlesHolder>(builder: (context, holder, child) {
-      return ListView.builder(
-          itemCount: holder.getSearchedArticles(query) == null
-              ? 0
-              : holder.getSearchedArticles(query).length,
-          itemBuilder: (context, position) =>
-              NewsItem(holder.getSearchedArticles(query)[position], true));
-    });
+    return Center(
+      child: NewsList(true),
+    );
   }
 
   @override
@@ -57,13 +54,8 @@ class ArticleSearch extends SearchDelegate<String> {
   @override
   String get searchFieldLabel => "Cerca argomenti, località e fonti";
 
-
   @override
   ThemeData appBarTheme(BuildContext context) {
     return searchAppTheme;
-  }
-
-  void _handleSearch(BuildContext context, String search) async {
-    await Api().searchArticles(context: context, search: search);
   }
 }

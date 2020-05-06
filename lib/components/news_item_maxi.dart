@@ -3,6 +3,9 @@ import 'package:goorlanews/components/bottom_sheet.dart';
 import 'package:goorlanews/components/news_item_image.dart';
 import 'package:goorlanews/model/article.dart';
 import 'package:goorlanews/utils/DateUtils.dart';
+import 'package:provider/provider.dart';
+
+import '../news_bloc.dart';
 
 class NewsItemMaxi extends StatelessWidget {
   final Article article;
@@ -30,25 +33,28 @@ class NewsItemMaxi extends StatelessWidget {
               height: 8,
             ),
             Text(
-              article.title,
+              article.title.substring(0, article.title.indexOf("-") - 1),
               style: Theme.of(context).textTheme.subtitle1,
-            ),
-            const SizedBox(
-              height: 5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
-                  DateUtils.getArticleDate(article.publishedAt),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    DateUtils.getArticleDate(article.publishedAt),
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.more_vert),
+                  icon: Icon(Icons.more_vert, color: Colors.grey[600]),
                   onPressed: () {
                     showModalBottomSheet(
                         context: context,
                         builder: (BuildContext bc) {
-                          return BottomSheetMenu(article);
+                          Provider.of<NewsBloc>(context, listen: false)
+                              .selectedArticle = article;
+                          return BottomSheetMenu();
                         });
                   },
                 )

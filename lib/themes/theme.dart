@@ -10,7 +10,7 @@ final appTheme = ThemeData(
         color: Colors.black,
       ),
       subtitle1: TextStyle(
-        fontFamily: 'Georgia',
+        fontFamily: 'Open Sans',
         fontWeight: FontWeight.bold,
         fontSize: 17,
         color: Colors.black,
