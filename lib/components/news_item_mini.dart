@@ -36,7 +36,7 @@ class NewsItemMini extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                        article.title.substring(0, article.title.indexOf("-")),
+                        article.title.substring(0, article.title.indexOf(" - ")),
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                       width: c_width,

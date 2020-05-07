@@ -33,7 +33,7 @@ class NewsItemMaxi extends StatelessWidget {
               height: 8,
             ),
             Text(
-              article.title.substring(0, article.title.indexOf("-") - 1),
+              article.title.substring(0, article.title.indexOf(" - ")),
               style: Theme.of(context).textTheme.subtitle1,
             ),
             Row(
