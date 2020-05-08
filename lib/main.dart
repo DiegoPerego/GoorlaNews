@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:goorlanews/extra/todo.dart';
 import 'package:goorlanews/model/article.dart';
+import 'file:///C:/Users/diegop/Desktop/diego/flutter%20corso/apps/goorla_news/lib/extra/bimbi.dart';
 import 'package:goorlanews/screens/news_detail.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,6 +36,8 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => News(),
+//          '/': (context) => TodoApp(),
+//          '/': (context) => Bimbi(),
           '/newsDetail': (context) => NewsDetail(),
         },
       ),
