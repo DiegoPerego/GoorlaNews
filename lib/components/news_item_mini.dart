@@ -13,43 +13,38 @@ class NewsItemMini extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double c_width = MediaQuery.of(context).size.width * 0.5;
-    double i_width = MediaQuery.of(context).size.width * 0.3;
-    double i_height = MediaQuery.of(context).size.width * 0.3;
+    double c_width = MediaQuery.of(context).size.width * 0.65;
 
     return Container(
         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Column(children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(
-                      height: 8,
-                    ),
                     Text(
                       article.source != null ? article.source : "",
                     ),
                     const SizedBox(
                       height: 8,
                     ),
-                    Container(
+                    LimitedBox(
                       child: Text(
-                        article.title.substring(0, article.title.indexOf(" - ")),
+                        article.title
+                            .substring(0, article.title.indexOf(" - ")),
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      width: c_width,
+                      maxWidth: c_width,
                     ),
                   ]),
               NewsItemImage(
                 article.urlToImage,
                 radius: 20.0,
-                height: i_height,
-                width: i_width,
+                mini: true,
               ),
             ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
           Column(children: <Widget>[
             Row(
@@ -63,7 +58,7 @@ class NewsItemMini extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.more_vert, color: Colors.grey[600]),
+                  icon: Icon(Icons.more_vert, color: Colors.grey[500]),
                   onPressed: () {
                     showModalBottomSheet(
                         context: context,
@@ -77,6 +72,12 @@ class NewsItemMini extends StatelessWidget {
               ],
             ),
           ]),
+          SizedBox(
+            height: 0.5,
+            child: Container(
+              color: Colors.grey[300],
+            ),
+          ),
         ]));
   }
 }

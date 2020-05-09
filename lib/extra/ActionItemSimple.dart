@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/diegop/Desktop/diego/flutter%20corso/apps/goorla_news/lib/extra/LayoutSizeChangeNotification.dart';
+import 'package:goorlanews/extra/LayoutSizeChangeNotification.dart';
 
 const ITEMS_WIDTH = 60.0;
 

@@ -5,65 +5,47 @@ import 'package:flutter/material.dart';
 class NewsItemImage extends StatelessWidget {
   final String image;
   final double radius;
-  final double height;
-  final double width;
+  final bool mini;
 
-  NewsItemImage(this.image, {Key key, this.radius, this.height, this.width})
+  NewsItemImage(this.image, {Key key, this.radius, this.mini})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      child: kIsWeb ? getImage() : getCachedImage(),
-      borderRadius:
-          radius != null ? BorderRadius.circular(radius) : BorderRadius.zero,
-    );
+    return Container(
+        height: mini ? 100 : 250,
+        width: mini ? 100 : MediaQuery.of(context).size.width,
+        child: ClipRRect(
+          child: kIsWeb ? getImage() : getCachedImage(),
+          borderRadius: radius != null
+              ? BorderRadius.circular(radius)
+              : BorderRadius.zero,
+        ));
   }
 
   Widget getImage() {
     return image != null
-        ? height != null && width != null
-            ? Image(
-                image: NetworkImage(image),
-                height: height,
-                width: width,
-                fit: BoxFit.cover,
-              )
-            : Image(image: NetworkImage(image))
+        ? Image(
+            image: NetworkImage(image),
+            fit: BoxFit.cover,
+          )
         : getDefaultImage();
   }
 
   Widget getCachedImage() {
     return image != null
-        ? height != null && width != null
-            ? CachedNetworkImage(
-                imageUrl: image,
-                height: height,
-                width: width,
-                fit: BoxFit.fitWidth,
-                placeholder: (context, url) =>
-                    center(CircularProgressIndicator()),
-                errorWidget: (context, url, error) =>
-                    center(Image(image: AssetImage('images/goorla_news.png'))))
-            : CachedNetworkImage(
-                imageUrl: image,
-                fit: BoxFit.fitWidth,
-                placeholder: (context, url) =>
-                    center(CircularProgressIndicator()),
-                errorWidget: (context, url, error) =>
-                    center(Image(image: AssetImage('images/goorla_news.png'))))
+        ? CachedNetworkImage(
+            imageUrl: image,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => center(CircularProgressIndicator()),
+            errorWidget: (context, url, error) =>
+                center(Image(image: AssetImage('images/goorla_news.png'))))
         : getDefaultImage();
   }
 
   Widget getDefaultImage() {
-    return height != null && width != null
-        ? Image(
-            image: AssetImage('images/goorla_news.png'),
-            height: height,
-            width: width,
-            fit: BoxFit.cover,
-          )
-        : Image(image: AssetImage('images/goorla_news.png'));
+    return Image(
+        image: AssetImage('images/goorla_news.png'), fit: BoxFit.cover);
   }
 
   center(Widget widget) => Container(

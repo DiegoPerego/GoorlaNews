@@ -22,6 +22,7 @@ class NewsItemMaxi extends StatelessWidget {
             NewsItemImage(
               article.urlToImage,
               radius: 20.0,
+              mini: false,
             ),
             const SizedBox(
               height: 8,
@@ -47,7 +48,7 @@ class NewsItemMaxi extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.more_vert, color: Colors.grey[600]),
+                  icon: Icon(Icons.more_vert, color: Colors.grey[500]),
                   onPressed: () {
                     showModalBottomSheet(
                         context: context,

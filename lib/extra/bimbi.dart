@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/diegop/Desktop/diego/flutter%20corso/apps/goorla_news/lib/extra/ActionItemSimple.dart';
+import 'package:goorlanews/extra/ActionItemSimple.dart';
 
 class Bimbi extends StatefulWidget {
   @override
