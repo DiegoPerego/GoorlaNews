@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final appTheme = ThemeData(
+final appThemeNews = ThemeData(
   appBarTheme: AppBarTheme(color: Colors.white),
   textTheme: TextTheme(
       headline1: TextStyle(
@@ -27,6 +27,12 @@ final appTheme = ThemeData(
         fontSize: 16,
         color: Colors.grey[700],
       )),
+);
+
+final appThemeBimby = ThemeData(
+  appBarTheme: AppBarTheme(color: Colors.white),
+  visualDensity:  VisualDensity.adaptivePlatformDensity,
+  fontFamily: "Bimbi",
 );
 
 final searchAppTheme = ThemeData(
